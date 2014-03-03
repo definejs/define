@@ -1,4 +1,6 @@
-# define - yet another module system for the browser
+# define
+
+Yet another module system for the browser
 
 *   Simple, feather-weight library
 *   One global to rule them all
@@ -6,7 +8,7 @@
 *   Cached module instantation
 *   DOM ready 
 
-## CAUTION - This is not a script loader
+## CAUTION: This is not a script loader
 
 This library neither loads your scripts dynamically nor binds module names to
 files.
@@ -17,6 +19,8 @@ This really sucks, but this library can help allowing scripts to be declared
 in any order besides its dependency tree.
 
 The only caveat is to declare this library first.
+
+## Usage
 
 If you are using a build system to concatenate your scripts, the script
 declarations can be very simple:
@@ -56,7 +60,7 @@ define('dom', function () {
 In order to have a unique global exposed there is required an entry point:
 `define.root`.
 
-The `root` method can be declared everywhere like modules do and can be declared
-multiple times allowing multiple entry points and easy debbuging.
+The `root` method can be declared everywhere like modules do and can be
+declared multiple times allowing multiple entry points and easy debbuging.
 
 [1]: http://requirejs.org/docs/whyamd.html#sugar
