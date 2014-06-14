@@ -1,4 +1,6 @@
-(function (register, ready) {
+(function (env) {
+  'use strict';
+  
   var modules = {},
       cached = {};
   
@@ -17,7 +19,7 @@
   };
   
   var root = function (callback) {
-    ready(function () {
+    env.ready(function () {
       root = function (callback) {
         callback(require);
       };
@@ -27,13 +29,18 @@
   };
 
   define.root = function (callback) {
+    // the function wrapper is needed in order to update the reference
+    // to the root function since it will be redefined on env ready
     root(callback);
   };
   
-  register('define', define);
+  env.global('define', define);
   
-})(function register (name, lib) {
-  window[name] = lib;
-}, function ready (callback) {
-  document.addEventListener("DOMContentLoaded", callback);
+})({
+  global: function (name, module) {
+    window[name] = module;
+  },
+  ready: function (callback) {
+    document.addEventListener("DOMContentLoaded", callback);
+  }
 });
