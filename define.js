@@ -28,12 +28,13 @@
     return module.ref;
   };
   
+  var rootSync = function (callback) {
+    callback(require);
+  };
+  
   var root = function (callback) {
     env.ready(function () {
-      root = function (callback) {
-        callback(require);
-      };
-      
+      if (root !== rootSync) { root = rootSync; }
       root(callback);
     });
   };
