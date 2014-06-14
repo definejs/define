@@ -1,27 +1,31 @@
 (function (env) {
   'use strict';
   
-  var modules = {},
-      cached = {};
+  var modules = {};
   
   var define = function (name, module) {
     if (modules[name]) {
       throw env.exception('module redefinition: ' + name);
     }
     
-    modules[name] = module;
+    modules[name] = {
+      ref: module,
+      cached: false
+    };
   };
   
   var require = function (name) {
-    if (cached[name]) { return cached[name]; }
+    var module = modules[name];
     
-    if (!modules[name]) {
+    if (!module) {
       throw env.exception('module undefined: ' + name);
     }
     
-    cached[name] = modules[name](require);
-    delete modules[name];
-    return cached[name];
+    if (module.cached) { return module.ref; }
+
+    module.ref = module.ref(require);
+    module.cached = true;
+    return module.ref;
   };
   
   var root = function (callback) {
