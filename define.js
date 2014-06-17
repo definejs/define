@@ -1,31 +1,26 @@
 (function (env) {
   'use strict';
   
-  var modules = {};
+  var registry = {};
   
   var define = function (name, module) {
-    if (modules[name]) {
-      throw env.exception('module redefinition: ' + name);
-    }
+    if (registry[name]) { throw env.err('module redefinition: ' + name); }
     
-    modules[name] = {
-      ref: module,
+    registry[name] = {
+      module: module,
       cached: false
     };
   };
   
   var require = function (name) {
-    var module = modules[name];
+    var entry = registry[name];
     
-    if (!module) {
-      throw env.exception('module undefined: ' + name);
-    }
-    
-    if (module.cached) { return module.ref; }
+    if (!entry) { throw env.err('module undefined: ' + name); }
+    if (entry.cached) { return entry.module; }
 
-    module.ref = module.ref(require);
-    module.cached = true;
-    return module.ref;
+    entry.module = entry.module(require);
+    entry.cached = true;
+    return entry.module;
   };
   
   var rootSync = function (callback) {
@@ -34,20 +29,16 @@
   
   var root = function (callback) {
     env.ready(function () {
-      if (root !== rootSync) { root = rootSync; }
+      root = rootSync;
       root(callback);
     });
   };
-
-  define.root = function (callback) {
-    
-    /**
-     * the function wrapper is needed in order to update the reference
-     * to the root function since it will be redefined on env ready
-     */
-     
+  
+  var rootWrapper = function (callback) {
     root(callback);
   };
+
+  define.root = rootWrapper;
   
   env.global('define', define);
   
@@ -58,7 +49,7 @@
   ready: function (callback) {
     document.addEventListener("DOMContentLoaded", callback);
   },
-  exception: function (e) {
+  err: function (e) {
     return new Error(e);
   }
 });
