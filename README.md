@@ -1,6 +1,10 @@
-# define
+define
+======
 
-Yet another module system for the browser
+Module system for the browser
+
+Featuring
+---------
 
 *   Simple, feather-weight library
 *   One global to rule them all
@@ -8,7 +12,8 @@ Yet another module system for the browser
 *   Cached module instantation
 *   DOM ready 
 
-## CAUTION: This is not a script loader
+CAUTION: This is not a script loader
+------------------------------------
 
 This library neither loads your scripts dynamically nor binds module names to
 files.
@@ -20,7 +25,8 @@ in any order besides its dependency tree.
 
 The only caveat is to declare this library first.
 
-## Usage
+Usage
+=====
 
 If you are using a build system to concatenate your scripts, the script
 declarations can be very simple:
