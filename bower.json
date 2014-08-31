@@ -1,6 +1,6 @@
 {
   "name": "define",
-  "description": "yet another module system for the browser",
+  "description": "module system for the browser",
   "version": "0.1.0",
   "main": "define.js",
   "keywords": [
