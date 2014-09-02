@@ -12,19 +12,23 @@
     };
   };
   
-  var require = function (name) {
-    var entry = registry[name];
+  var requireFrom = function (parent) {
+    var require = function (name) {
+      var entry = registry[name];
+      
+      if (!entry) { throw env.err(parent + ': module undefined: ' + name); }
+      if (entry.cached) { return entry.module; }
+  
+      entry.module = entry.module(requireFrom(name));
+      entry.cached = true;
+      return entry.module;
+    };
     
-    if (!entry) { throw env.err('module undefined: ' + name); }
-    if (entry.cached) { return entry.module; }
-
-    entry.module = entry.module(require);
-    entry.cached = true;
-    return entry.module;
+    return require;
   };
   
   var rootSync = function (callback) {
-    callback(require);
+    callback(requireFrom('root'));
   };
   
   var root = function (callback) {
