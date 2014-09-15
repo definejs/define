@@ -3,6 +3,7 @@
   "description": "Module system for the browser",
   "version": "0.2.0",
   "main": "define.js",
+  "dependencies": {},
   "keywords": [
     "module",
     "require"
