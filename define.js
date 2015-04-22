@@ -43,11 +43,12 @@
   };
 
   var addReadyListener = function (listener) {
-    document.addEventListener("DOMContentLoaded", function () {
-      addReadyListener = callAsync;
-      listener();
-    });
+    document.addEventListener("DOMContentLoaded", listener);
   };
+
+  addReadyListener(function () {
+    addReadyListener = callAsync;
+  });
 
   var onReady = function (listener) {
     addReadyListener(listener);

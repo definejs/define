@@ -1,12 +1,14 @@
 {
   "name": "define",
   "description": "Module system for the browser",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "main": "define.js",
   "dependencies": {},
   "keywords": [
     "module",
-    "require"
+    "require",
+    "CommonJS",
+    "AMD"
   ],
   "license": "MIT"
 }
