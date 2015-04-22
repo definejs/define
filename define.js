@@ -26,34 +26,44 @@
     
     return require;
   };
-  
-  var rootSync = function (callback) {
-    callback(requireFrom('root'));
-  };
-  
+
   var root = function (callback) {
-    env.ready(function () {
-      root = rootSync;
-      root(callback);
+    env.onReady(function () {
+      callback(requireFrom('root'));
     });
   };
-  
-  var rootWrapper = function (callback) {
-    root(callback);
+
+  define.root = root;
+  env.global('define', define);
+})((function env () {
+  'use strict';
+
+  var callAsync = function (callback) {
+    setTimeout(callback, 0);
   };
 
-  define.root = rootWrapper;
-  
-  env.global('define', define);
-  
-})({
-  global: function (name, module) {
-    window[name] = module;
-  },
-  ready: function (callback) {
-    document.addEventListener("DOMContentLoaded", callback);
-  },
-  err: function (e) {
+  var addReadyListener = function (listener) {
+    document.addEventListener("DOMContentLoaded", function () {
+      addReadyListener = callAsync;
+      listener();
+    });
+  };
+
+  var onReady = function (listener) {
+    addReadyListener(listener);
+  };
+
+  var err = function (e) {
     return new Error(e);
-  }
-});
+  };
+
+  var global = function (name, module) {
+    window[name] = module;
+  };
+
+  return {
+    onReady: onReady,
+    err: err,
+    global: global
+  };
+})());
