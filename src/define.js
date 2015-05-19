@@ -1,10 +1,10 @@
-(function (env) {
+(function (onReady, global) {
   'use strict';
   
   var registry = {};
   
   var define = function (name, module) {
-    if (registry[name]) { throw env.err('module redefinition: ' + name); }
+    if (registry[name]) { throw 'module redefinition: ' + name; }
     
     registry[name] = {
       module: module,
@@ -13,29 +13,27 @@
   };
   
   var requireFrom = function (parent) {
-    var require = function (name) {
+    return function require (name) {
       var entry = registry[name];
       
-      if (!entry) { throw env.err(parent + ': module undefined: ' + name); }
+      if (!entry) { throw parent + ': module undefined: ' + name; }
       if (entry.cached) { return entry.module; }
   
       entry.module = entry.module(requireFrom(name));
       entry.cached = true;
       return entry.module;
     };
-    
-    return require;
   };
 
-  var root = function (callback) {
-    env.onReady(function () {
+  define.root = function (callback) {
+    onReady(function () {
       callback(requireFrom('root'));
     });
   };
 
-  define.root = root;
-  env.global('define', define);
-})((function env () {
+  global('define', define);
+
+})((function onReady () {
   'use strict';
 
   var callAsync = function (callback) {
@@ -50,21 +48,11 @@
     addReadyListener = callAsync;
   });
 
-  var onReady = function (listener) {
+  return function onReady (listener) {
     addReadyListener(listener);
   };
 
-  var err = function (e) {
-    return new Error(e);
-  };
-
-  var global = function (name, module) {
-    window[name] = module;
-  };
-
-  return {
-    onReady: onReady,
-    err: err,
-    global: global
-  };
-})());
+})(), function global (name, module) {
+  'use strict';
+  window[name] = module;
+}); 
