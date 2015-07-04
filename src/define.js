@@ -41,7 +41,7 @@
   };
 
   var addReadyListener = function (listener) {
-    document.addEventListener("DOMContentLoaded", listener);
+    document.addEventListener('DOMContentLoaded', listener);
   };
 
   addReadyListener(function () {
