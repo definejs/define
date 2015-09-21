@@ -1,4 +1,4 @@
-(function (onReady, global) {
+(function (onReady, register) {
   'use strict';
   
   var registry = {};
@@ -31,7 +31,11 @@
     });
   };
 
-  global('define', define);
+  define.test = function (callback) {
+    callback(requireFrom('root'));
+  };
+
+  register('define', define);
 
 })((function onReady () {
   'use strict';
@@ -52,7 +56,9 @@
     addReadyListener(listener);
   };
 
-})(), function global (name, module) {
+})(), function register (name, module) {
   'use strict';
-  window[name] = module;
+
+  if (window) { window[name] = module; }
+  if (global) { global[name] = module; }
 }); 
