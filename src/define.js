@@ -25,7 +25,7 @@
     };
   };
 
-  define.root = function (callback) {
+  define.ready = function (callback) {
     onReady(function () {
       callback(requireFrom('root'));
     });
@@ -40,9 +40,8 @@
 })(function onReady (listener) {
   'use strict';
 
-  if (typeof document !== 'undefined') {
-    document.addEventListener('DOMContentLoaded', listener);
-  } else { setTimeout(callback, 0); }
+  if (typeof document === 'undefined') { return; }
+  document.addEventListener('DOMContentLoaded', listener);
 }, function register (name, module) {
   'use strict';
 
