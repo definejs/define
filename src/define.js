@@ -40,11 +40,12 @@
 })(function onReady (listener) {
   'use strict';
 
-  if (document) { document.addEventListener('DOMContentLoaded', listener); }
-  else { setTimeout(callback, 0); }
+  if (typeof document !== 'undefined') {
+    document.addEventListener('DOMContentLoaded', listener);
+  } else { setTimeout(callback, 0); }
 }, function register (name, module) {
   'use strict';
 
-  if (window) { window[name] = module; }
-  if (global) { global[name] = module; }
+  if (typeof window !== 'undefined') { window[name] = module; }
+  if (typeof global !== 'undefined') { global[name] = module; }
 }); 
