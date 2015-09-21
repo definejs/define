@@ -1,24 +1,24 @@
 (function (onReady, register) {
   'use strict';
-  
+
   var registry = {};
-  
+
   var define = function (name, module) {
     if (registry[name]) { throw 'module redefinition: ' + name; }
-    
+
     registry[name] = {
       module: module,
       cached: false
     };
   };
-  
+
   var requireFrom = function (parent) {
     return function require (name) {
       var entry = registry[name];
-      
+
       if (!entry) { throw parent + ': module undefined: ' + name; }
       if (entry.cached) { return entry.module; }
-  
+
       entry.module = entry.module(requireFrom(name));
       entry.cached = true;
       return entry.module;
@@ -47,4 +47,4 @@
 
   if (typeof window !== 'undefined') { window[name] = module; }
   if (typeof global !== 'undefined') { global[name] = module; }
-}); 
+});
