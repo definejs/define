@@ -37,26 +37,12 @@
 
   register('define', define);
 
-})((function onReady () {
+})(function onReady (listener) {
   'use strict';
 
-  var callAsync = function (callback) {
-    setTimeout(callback, 0);
-  };
-
-  var addReadyListener = function (listener) {
-    document.addEventListener('DOMContentLoaded', listener);
-  };
-
-  addReadyListener(function () {
-    addReadyListener = callAsync;
-  });
-
-  return function onReady (listener) {
-    addReadyListener(listener);
-  };
-
-})(), function register (name, module) {
+  if (document) { document.addEventListener('DOMContentLoaded', listener); }
+  else { setTimeout(callback, 0); }
+}, function register (name, module) {
   'use strict';
 
   if (window) { window[name] = module; }
