@@ -1,4 +1,4 @@
-define
+module
 ======
 
 Module system for the browser
@@ -32,19 +32,17 @@ If you are using a build system to concatenate your scripts, the script
 declarations can be very simple:
 
 ```html
-<script src="define.js"></script>
+<script src="module.js"></script>
 <script src="bundle.js"></script>
 ```
 
-Its API is an unholy act of inspiration from [requireJS sugar syntax][1]
-
 ```js
-define.root(function (require) {
+module(function (require) {
   var greet = require('greet');
   greet('world');
 });
 
-define('greet', function (require) {
+module('greet', function (require) {
   var $ = require('dom');
     
   var greet = function (greeted) {
@@ -54,7 +52,7 @@ define('greet', function (require) {
   return greet;
 });
 
-define('dom', function () {
+module('dom', function () {
   var dom =  function (selector) {
     return document.querySelector(selector);
   };
@@ -62,11 +60,3 @@ define('dom', function () {
   return dom;
 });
 ```
-
-In order to have a unique global exposed there is required an entry point:
-`define.root`.
-
-The `root` method can be declared everywhere like modules do and can be
-declared multiple times allowing multiple entry points and easy debbuging.
-
-[1]: http://requirejs.org/docs/whyamd.html#sugar

@@ -1,10 +1,27 @@
-(function (onReady, register) {
+(function (env) {
   'use strict';
 
   var registry = {};
 
-  var define = function (name, module) {
-    if (registry[name]) { throw 'module redefinition: ' + name; }
+  var getter = function (parent) {
+    var msgPrefix = parent ? (parent + ': ') : '';
+
+    return function (name) {
+      var entry = registry[name];
+
+      if (!entry) { throw msgPrefix + 'module not registered: ' + name; }
+      if (entry.cached) { return entry.module; }
+
+      entry.module = entry.module(getter(name));
+      entry.cached = true;
+      return entry.module;
+    };
+  };
+
+  var get = getter();
+
+  var register = function (name, module) {
+    if (registry[name]) { throw 'module already registered: ' + name; }
 
     registry[name] = {
       module: module,
@@ -12,39 +29,46 @@
     };
   };
 
-  var requireFrom = function (parent) {
-    return function require (name) {
-      var entry = registry[name];
-
-      if (!entry) { throw parent + ': module undefined: ' + name; }
-      if (entry.cached) { return entry.module; }
-
-      entry.module = entry.module(requireFrom(name));
-      entry.cached = true;
-      return entry.module;
-    };
-  };
-
-  define.ready = function (callback) {
-    onReady(function () {
-      callback(requireFrom('root'));
+  var root = function (callback) {
+    env.onReady(function () {
+      callback(get);
     });
   };
 
-  define.test = function (callback) {
-    callback(requireFrom('root'));
+  var module = function () {
+    var arg = arguments[0],
+        arg2 = arguments[1];
+
+    if (typeof arg === 'string' && typeof arg2 === 'function') {
+      return register(arg, arg2);
+    }
+
+    if (typeof arg === 'function') { return root(arg); }
+    if (typeof arg === 'string') { return get(arg); }
   };
 
-  register('define', define);
+  env.register('module', module);
 
-})(function onReady (listener) {
+})((function env () {
   'use strict';
 
-  if (typeof document === 'undefined') { return; }
-  document.addEventListener('DOMContentLoaded', listener);
-}, function register (name, module) {
-  'use strict';
+  var isDefined = function (arg) { return typeof arg !== 'undefined'; };
 
-  if (typeof window !== 'undefined') { window[name] = module; }
-  if (typeof global !== 'undefined') { global[name] = module; }
-});
+  var onReady = function (listener) {
+    if (isDefined(document)) {
+      document.addEventListener('DOMContentLoaded', listener);
+    } else {
+      setTimeout(listener, 0);
+    }
+  };
+
+  var register = function (name, module) {
+    if (isDefined(window)) { window[name] = module; }
+    if (isDefined(global)) { global[name] = module; }
+  };
+
+  return {
+    onReady: onReady,
+    register: register
+  };
+})());
