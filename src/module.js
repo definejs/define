@@ -52,10 +52,8 @@
 })((function env () {
   'use strict';
 
-  var isDefined = function (arg) { return typeof arg !== 'undefined'; };
-
   var onReady = function (listener) {
-    if (isDefined(document)) {
+    if (typeof document !== 'undefined') {
       document.addEventListener('DOMContentLoaded', listener);
     } else {
       setTimeout(listener, 0);
@@ -63,8 +61,11 @@
   };
 
   var register = function (name, module) {
-    if (isDefined(window)) { window[name] = module; }
-    if (isDefined(global)) { global[name] = module; }
+    if (typeof window !== 'undefined') { window[name] = module; }
+    
+    if (typeof module !== 'undefined' && module.exports) {
+      module.exports = module;
+    }
   };
 
   return {
