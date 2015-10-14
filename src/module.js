@@ -53,19 +53,11 @@
   'use strict';
 
   var onReady = function (listener) {
-    if (typeof document !== 'undefined') {
-      document.addEventListener('DOMContentLoaded', listener);
-    } else {
-      setTimeout(listener, 0);
-    }
+    document.addEventListener('DOMContentLoaded', listener);
   };
 
   var register = function (name, module) {
-    if (typeof window !== 'undefined') { window[name] = module; }
-    
-    if (typeof module !== 'undefined' && module.exports) {
-      module.exports = module;
-    }
+    window[name] = module;
   };
 
   return {
