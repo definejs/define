@@ -26,9 +26,7 @@
   var get = getter();
 
   var root = function (callback) {
-    env.onReady(function () {
-      callback(get);
-    });
+    env.onReady(function () { callback(get); });
   };
 
   var module = function (a, b) {
