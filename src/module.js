@@ -18,8 +18,6 @@
     };
   };
 
-  var get = getter();
-
   var register = function (name, module) {
     if (registry[name]) { throw 'module already registered: ' + name; }
 
@@ -29,22 +27,21 @@
     };
   };
 
+  var get = getter();
+
   var root = function (callback) {
     env.onReady(function () {
       callback(get);
     });
   };
 
-  var module = function () {
-    var arg = arguments[0],
-        arg2 = arguments[1];
-
-    if (typeof arg === 'string' && typeof arg2 === 'function') {
-      return register(arg, arg2);
+  var module = function (a, b) {
+    if (typeof a === 'string' && typeof b === 'function') {
+      return register(a, b);
     }
 
-    if (typeof arg === 'function') { return root(arg); }
-    if (typeof arg === 'string') { return get(arg); }
+    if (typeof a === 'function') { return root(a); }
+    if (typeof a === 'string') { return get(a); }
   };
 
   env.register('module', module);
