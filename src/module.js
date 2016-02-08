@@ -19,6 +19,7 @@
 
       entry.module = entry.module(getter(name));
       entry.ready = true;
+
       return entry.module;
     };
   };
