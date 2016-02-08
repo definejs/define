@@ -45,20 +45,11 @@
   };
 
   env.register('module', module);
-
-})((function env () {
-  'use strict';
-
-  var onReady = function (listener) {
+})({
+  onReady: function (listener) {
     document.addEventListener('DOMContentLoaded', listener);
-  };
-
-  var register = function (name, module) {
+  },
+  register: function (name, module) {
     window[name] = module;
-  };
-
-  return {
-    onReady: onReady,
-    register: register
-  };
-})());
+  }
+});
