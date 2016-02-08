@@ -5,11 +5,7 @@
 
   var register = function (name, module) {
     if (registry[name]) { throw 'module already registered: ' + name; }
-
-    registry[name] = {
-      module: module,
-      cached: false
-    };
+    registry[name] = { module: module, ready: false };
   };
 
   var getter = function (parent) {
@@ -19,10 +15,10 @@
       var entry = registry[name];
 
       if (!entry) { throw errPrefix + 'module not registered: ' + name; }
-      if (entry.cached) { return entry.module; }
+      if (entry.ready) { return entry.module; }
 
       entry.module = entry.module(getter(name));
-      entry.cached = true;
+      entry.ready = true;
       return entry.module;
     };
   };
