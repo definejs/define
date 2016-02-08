@@ -3,27 +3,27 @@
 
   var registry = {};
 
-  var getter = function (parent) {
-    var msgPrefix = parent ? (parent + ': ') : '';
-
-    return function (name) {
-      var entry = registry[name];
-
-      if (!entry) { throw msgPrefix + 'module not registered: ' + name; }
-      if (entry.cached) { return entry.module; }
-
-      entry.module = entry.module(getter(name));
-      entry.cached = true;
-      return entry.module;
-    };
-  };
-
   var register = function (name, module) {
     if (registry[name]) { throw 'module already registered: ' + name; }
 
     registry[name] = {
       module: module,
       cached: false
+    };
+  };
+
+  var getter = function (parent) {
+    var errPrefix = parent ? (parent + ': ') : '';
+
+    return function (name) {
+      var entry = registry[name];
+
+      if (!entry) { throw errPrefix + 'module not registered: ' + name; }
+      if (entry.cached) { return entry.module; }
+
+      entry.module = entry.module(getter(name));
+      entry.cached = true;
+      return entry.module;
     };
   };
 
