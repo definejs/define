@@ -1,7 +1,7 @@
 module
 ======
 
-Module system for the browser
+Module system
 
 Featuring
 ---------
