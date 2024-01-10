@@ -41,8 +41,13 @@
 
   env.register('module', module);
 })({
-  onReady: function (listener) {
-    document.addEventListener('DOMContentLoaded', listener);
+  onReady: function (callback) {
+    if (document.readyState !== "loading") {
+      callback();
+      return;
+    }
+
+    document.addEventListener("DOMContentLoaded", callback);
   },
   register: function (name, module) {
     window[name] = module;
